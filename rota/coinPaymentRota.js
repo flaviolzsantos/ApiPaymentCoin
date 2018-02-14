@@ -1,8 +1,10 @@
 let coinPaymentSrv = require('../service/coinPaymentSrv.js').CoinPaymentSrv;
+var conexao = require('../config/conexaoConfig');
+
 
 module.exports = function(app, coinPayment){
     let srv = new coinPaymentSrv(coinPayment);
-    console.log(process.env.teste);
+    conexao.Conectar();
 
     app.post('/CoinPayment/Create', (req, res) => {
         srv.Create(req.body, res);
@@ -15,5 +17,4 @@ module.exports = function(app, coinPayment){
     app.post('/CoinPayment/GetIpn', (req, res) => {
         srv.GetIpn(req.body, res);
     });
-
 }
