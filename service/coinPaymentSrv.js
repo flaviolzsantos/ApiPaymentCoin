@@ -1,6 +1,8 @@
 let _ = require('lodash'),
 LogSrv = require('../service/logSrv').LogSrv;
 
+let logSrv = new LogSrv();
+
 CoinPaymentSrv = function(client) {   
 
     CoinPaymentSrv.prototype.Create = (jsonCadastro, call) =>{
@@ -26,13 +28,19 @@ CoinPaymentSrv = function(client) {
         jsonCreate.buyer_email = jsonCadastro.emailUsuario;
         jsonCreate.item_name = jsonCadastro.nomeProduto;
 
+        // call.send();
+        // return;
+
         client.createTransaction(jsonCreate, function(err, res){
     
             if(err){
                 call.status(500).send(err);
+                jsonCreate.erro = err;
+                logSrv.SalvarCriacaoEnvioCoinPayment(jsonCreate, false);
                 return;
             }
-    
+            
+            logSrv.SalvarCriacaoEnvioCoinPayment(jsonCreate, false, "envio");
             call.send(res);
         });
         

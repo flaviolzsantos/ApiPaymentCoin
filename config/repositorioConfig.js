@@ -10,18 +10,27 @@ Repositorio = function() {
             db.collection(nomeColecao,function(erroCollection, collection){
 
                 if(erroCollection){
-                    cbErro(erroCollection);
+                    
+                    if(cbErro)
+                        cbErro(erroCollection);
+
                     client.close();
                     return;
                 }
 
                 collection.find().toArray(function(erroFind, dados){
                     if(erroFind){
-                        cbErro(erroFind);
+                        
+                        if(cbErro)
+                            cbErro(erroFind);
+
                         client.close();
                         return;
                     }
-                    cbSucesso(dados);
+
+                    if(cbSucesso)
+                        cbSucesso(dados);
+
                     client.close();
                 })
             });
@@ -61,11 +70,15 @@ Repositorio = function() {
 
             db.collection(nomeColecao).insert(colecao, (erroInsert, dadosInsert) =>{
                 if(erroInsert){
-                    cbErro(erroInsert);
+
+                    if(cbErro)
+                        cbErro(erroInsert);
+
                     return;
                 }
 
-                cbSucesso(dadosInsert);
+                if(cbSucesso)
+                    cbSucesso(dadosInsert);
             })
 
         },(erro) => cbErro(erro))

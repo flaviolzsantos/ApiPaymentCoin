@@ -11,9 +11,13 @@ LogSrv = function(){
         repositorio.ObterComFiltro("Log", filtro, cbSucesso, cbErro);
     }
 
-    LogSrv.prototype.SalvarEnvioCoinPayment = (colecao, cbSucesso, cbErro) =>{
-        repositorio.Salvar("LogEnvioCoinPayment", colecao, cbSucesso, cbErro);
+    LogSrv.prototype.SalvarCriacaoCoinPayment = (colecao, erro, tipoEnvio) =>{
+        colecao.tipoEnvio = tipoEnvio;
+        colecao.nomeParceiro = "coinPayment";
+        colecao.erro = erro;
+        repositorio.Salvar("Log", colecao);
     }
+    
 }
 
 exports.LogSrv = LogSrv;
