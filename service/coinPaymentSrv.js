@@ -36,11 +36,11 @@ CoinPaymentSrv = function(client) {
             if(err){
                 call.status(500).send(err);
                 jsonCreate.erro = err;
-                logSrv.SalvarCriacaoEnvioCoinPayment(jsonCreate, false);
+                logSrv.SalvarCriacaoCoinPayment(jsonCreate, false, "envio");
                 return;
             }
             
-            logSrv.SalvarCriacaoEnvioCoinPayment(jsonCreate, false, "envio");
+            logSrv.SalvarCriacaoCoinPayment(jsonCreate, false, "envio");
             call.send(res);
         });
         
