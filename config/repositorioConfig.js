@@ -70,18 +70,14 @@ Repositorio = function() {
 
             db.collection(nomeColecao).insert(colecao, (erroInsert, dadosInsert) =>{
                 if(erroInsert){
-
-                    if(cbErro)
-                        cbErro(erroInsert);
-
+                    (cbErro) ? cbErro(erroInsert) : "";
                     return;
                 }
 
-                if(cbSucesso)
-                    cbSucesso(dadosInsert);
+                (cbSucesso) ? cbSucesso(dadosInsert) : "";
             })
 
-        },(erro) => cbErro(erro))
+        },(erro) => (cbErro) ? cbErro(erro) : "")
     }
 }
 

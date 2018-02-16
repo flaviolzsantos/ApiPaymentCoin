@@ -1,7 +1,11 @@
 let _ = require('lodash'),
-LogSrv = require('../service/logSrv').LogSrv;
+LogSrv = require('../service/logSrv').LogSrv,
+util = require('../shared/util').Util
+PedidoSrv = require('../service/pedidoSrv').PedidoSrv;
+
 
 let logSrv = new LogSrv();
+let pedidoSrv = new PedidoSrv();
 
 CoinPaymentSrv = function(client) {   
 
@@ -27,6 +31,7 @@ CoinPaymentSrv = function(client) {
         jsonCreate.buyer_name = jsonCadastro.nomeUsuario;
         jsonCreate.buyer_email = jsonCadastro.emailUsuario;
         jsonCreate.item_name = jsonCadastro.nomeProduto;
+        
 
         // call.send();
         // return;
@@ -36,12 +41,19 @@ CoinPaymentSrv = function(client) {
             if(err){
                 call.status(500).send(err);
                 jsonCreate.erro = err;
-                logSrv.SalvarCriacaoCoinPayment(jsonCreate, false, "envio");
+                logSrv.SalvarCriacaoCoinPayment(jsonCreate, true, util.TipoEnvio.Envio);
                 return;
-            }
+            }            
             
-            logSrv.SalvarCriacaoCoinPayment(jsonCreate, false, "envio");
             call.send(res);
+
+            logSrv.SalvarCriacaoCoinPayment(jsonCreate, false, util.TipoEnvio.Envio);
+            logSrv.SalvarCriacaoCoinPayment(res, false, util.TipoEnvio.Receber);
+
+            jsonCreate.idTx = res.txn_id;
+            jsonCreate.status = 0;
+            jsonCreate.status_text = "Waiting for buyer funds...",
+            pedidoSrv.SalvarPedido(jsonCreate);
         });
         
     }
