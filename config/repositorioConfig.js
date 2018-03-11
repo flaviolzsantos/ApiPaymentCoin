@@ -80,11 +80,12 @@ Repositorio = function() {
         },(erro) => (cbErro) ? cbErro(erro) : "")
     }
 
-    Repositorio.prototype.Atualizar = (nomeColecao, colecao, cbSucesso, cbErro) => {
+    Repositorio.prototype.Atualizar = (nomeColecao, query, colecao, cbSucesso, cbErro) => {
         conexao.Conectar((client) => {
             let db = client.db(process.env.NOME_DB);
 
-            db.collection(nomeColecao).update(colecao, (erroUpdate, dadosUpdate) =>{
+            db.collection(nomeColecao).update(query, colecao, {multi:true}, (erroUpdate, dadosUpdate) =>{
+                //console.log(erroUpdate);
                 if(erroUpdate){
                     (cbErro) ? cbErro(erroUpdate) : "";
                     return;

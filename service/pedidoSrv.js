@@ -12,8 +12,8 @@ PedidoSrv = function(){
         repositorio.Salvar(nomeColecao, colecao);
     }
 
-    PedidoSrv.prototype.AtualizarStatusPedido = (colecao, cbSucesso, cbErro) =>{
-        repositorio.Atualizar(nomeColecao, colecao, cbSucesso, cbErro);
+    PedidoSrv.prototype.AtualizarStatusPedido = (query, colecao, cbSucesso, cbErro) =>{
+        repositorio.Atualizar(nomeColecao, query, colecao, cbSucesso, cbErro);
     }
 };
 
