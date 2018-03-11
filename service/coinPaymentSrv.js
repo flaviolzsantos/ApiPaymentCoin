@@ -69,8 +69,17 @@ CoinPaymentSrv = function(client) {
     }
 
     CoinPaymentSrv.prototype.GetIpn = (data, call) =>{
+        
         logSrv.SalvarCriacaoCoinPayment(data, false, util.TipoEnvio.ReceberIPN);
-        call.send();
+
+        pedidoSrv.ObterPedidoPorId(data.item_number, (dados)=>{
+            dados.status = data.status;
+            dados.status_text = data.status_text;
+            pedidoSrv.AtualizarStatusPedido(dados);
+            call.send();
+        }, (erro) =>{
+            call.send();
+        });
     }
 }
 

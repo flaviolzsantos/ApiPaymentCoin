@@ -79,6 +79,22 @@ Repositorio = function() {
 
         },(erro) => (cbErro) ? cbErro(erro) : "")
     }
+
+    Repositorio.prototype.Atualizar = (nomeColecao, colecao, cbSucesso, cbErro) => {
+        conexao.Conectar((client) => {
+            let db = client.db(process.env.NOME_DB);
+
+            db.collection(nomeColecao).update(colecao, (erroUpdate, dadosUpdate) =>{
+                if(erroUpdate){
+                    (cbErro) ? cbErro(erroUpdate) : "";
+                    return;
+                }
+
+                (cbSucesso) ? cbSucesso(dadosUpdate) : "";
+            })
+
+        },(erro) => (cbErro) ? cbErro(erro) : "")
+    }
 }
 
 exports.Repositorio = Repositorio;

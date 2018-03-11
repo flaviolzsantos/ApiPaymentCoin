@@ -4,16 +4,16 @@ nomeColecao = 'Pedido';
 let repositorio = new Repositorio();
 
 PedidoSrv = function(){
-    PedidoSrv.prototype.ObterStatusPedidoPorId = (id, cbSucesso, cbErro) =>{
+    PedidoSrv.prototype.ObterPedidoPorId = (id, cbSucesso, cbErro) =>{
         repositorio.ObterComFiltro(nomeColecao, {item_number:id}, cbSucesso, cbErro);
     }
 
     PedidoSrv.prototype.SalvarPedido = (colecao) =>{
-        repositorio.Salvar(nomeColecao, colecao)
+        repositorio.Salvar(nomeColecao, colecao);
     }
 
-    PedidoSrv.prototype.AtualizarStatusPedido = (colecao) ={
-
+    PedidoSrv.prototype.AtualizarStatusPedido = (colecao, cbSucesso, cbErro) =>{
+        repositorio.Atualizar(nomeColecao, colecao, cbSucesso, cbErro);
     }
 };
 
