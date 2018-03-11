@@ -5,7 +5,7 @@ let repositorio = new Repositorio();
 
 PedidoSrv = function(){
     PedidoSrv.prototype.ObterStatusPedidoPorId = (id, cbSucesso, cbErro) =>{
-        repositorio.ObterComFiltro(nomeColecao, {id:id}, cbSucesso, cbErro);
+        repositorio.ObterComFiltro(nomeColecao, {item_number:id}, cbSucesso, cbErro);
     }
 
     PedidoSrv.prototype.SalvarPedido = (colecao) =>{

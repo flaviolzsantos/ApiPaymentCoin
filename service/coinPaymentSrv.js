@@ -21,13 +21,13 @@ CoinPaymentSrv = function(client) {
             call.status(500).send('Valor é obrigatório');
             return;
         }
-        if(_.isNil(jsonCadastro.id)){
+        if(_.isNil(jsonCadastro.idAgendamento)){
             call.status(500).send('Id é obrigatório');
             return;
         }
     
         jsonCreate.amount = jsonCadastro.valor;
-        jsonCreate.item_number = jsonCadastro.id;
+        jsonCreate.item_number = jsonCadastro.idAgendamento;
         jsonCreate.buyer_name = jsonCadastro.nomeUsuario;
         jsonCreate.buyer_email = jsonCadastro.emailUsuario;
         jsonCreate.item_name = jsonCadastro.nomeProduto;
