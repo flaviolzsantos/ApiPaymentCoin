@@ -12,7 +12,8 @@ app.use(helmet());
 
 app.use(function (req, res, next) {
 
-    if(req.headers.auth == undefined || req.headers.auth != process.env.HEADER_HASH){
+
+    if(req.originalUrl != '/CoinPayment/GetIpn' && (req.headers.auth == undefined || req.headers.auth != process.env.HEADER_HASH)){
         res.status(401).send({message : 'Não autorizado'});
         return;
     }

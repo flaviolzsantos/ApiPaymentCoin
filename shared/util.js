@@ -3,7 +3,8 @@ var Util = function(){}
 
 Util.TipoEnvio = {
     Envio : "Enviar",
-    Receber : "Receber"
+    Receber : "Receber",
+    ReceberIPN: "ReceberIPN"
 };
 
 

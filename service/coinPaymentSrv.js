@@ -69,7 +69,7 @@ CoinPaymentSrv = function(client) {
     }
 
     CoinPaymentSrv.prototype.GetIpn = (data, call) =>{
-        console.log(data);
+        logSrv.SalvarCriacaoCoinPayment(data, false, util.TipoEnvio.ReceberIPN);
         call.send();
     }
 }
