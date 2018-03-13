@@ -44,8 +44,6 @@ CoinPaymentSrv = function(client) {
                 logSrv.SalvarCriacaoCoinPayment(jsonCreate, true, util.TipoEnvio.Envio);
                 return;
             }            
-            
-            call.send(res);
 
             logSrv.SalvarCriacaoCoinPayment(jsonCreate, false, util.TipoEnvio.Envio);
             logSrv.SalvarCriacaoCoinPayment(res, false, util.TipoEnvio.Receber);
@@ -54,6 +52,8 @@ CoinPaymentSrv = function(client) {
             jsonCreate.status = 0;
             jsonCreate.status_text = "Waiting for buyer funds...",
             pedidoSrv.SalvarPedido(jsonCreate);
+
+            call.send(res);
         });
         
     }
