@@ -1,7 +1,9 @@
-let _ = require('lodash'),
+const _ = require('lodash'),
 LogSrv = require('../service/logSrv').LogSrv,
 util = require('../shared/util').Util
-PedidoSrv = require('../service/pedidoSrv').PedidoSrv;
+PedidoSrv = require('../service/pedidoSrv').PedidoSrv,
+MongoClient = require('mongodb').MongoClient,
+fs = require('fs');
 
 
 let logSrv = new LogSrv();
@@ -9,9 +11,12 @@ let pedidoSrv = new PedidoSrv();
 
 CoinPaymentSrv = function(client) {   
 
-    CoinPaymentSrv.prototype.Create = (jsonCadastro, call) =>{
+    CoinPaymentSrv.prototype.Create = function(jsonCadastro, call) {
+        
 
-        let jsonCreate = require('../template/coinPayment/create.json');
+        let jsonCreate = JSON.parse(fs.readFileSync(__dirname.substring(0, __dirname.length - '\\service'.length) + '/template/coinPayment/create.json', 'utf8'));
+
+       
     
         if(_.isEqual(jsonCadastro, {})){
             call.status(500).send('Json é obrigatório');
@@ -31,7 +36,12 @@ CoinPaymentSrv = function(client) {
         jsonCreate.buyer_name = jsonCadastro.nomeUsuario;
         jsonCreate.buyer_email = jsonCadastro.emailUsuario;
         jsonCreate.item_name = jsonCadastro.nomeProduto;
+
+        jsonCreate.idTx = "res.txn_id";
+        jsonCreate.status = 0;
+        jsonCreate.status_text = "Waiting for buyer funds...";
         
+        pedidoSrv.SalvarPedido(jsonCreate);        
 
         // call.send();
         // return;
@@ -44,13 +54,13 @@ CoinPaymentSrv = function(client) {
                 logSrv.SalvarCriacaoCoinPayment(jsonCreate, true, util.TipoEnvio.Envio);
                 return;
             }            
-
+            
             logSrv.SalvarCriacaoCoinPayment(jsonCreate, false, util.TipoEnvio.Envio);
             logSrv.SalvarCriacaoCoinPayment(res, false, util.TipoEnvio.Receber);
 
             jsonCreate.idTx = res.txn_id;
             jsonCreate.status = 0;
-            jsonCreate.status_text = "Waiting for buyer funds...",
+            jsonCreate.status_text = "Waiting for buyer funds...";
             pedidoSrv.SalvarPedido(jsonCreate);
 
             call.send(res);
