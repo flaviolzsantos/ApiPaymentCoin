@@ -26,13 +26,13 @@ CoinPaymentSrv = function(client) {
             call.status(500).send('Valor é obrigatório');
             return;
         }
-        if(_.isNil(jsonCadastro.idAgendamento)){
+        if(_.isNil(jsonCadastro.id)){
             call.status(500).send('Id é obrigatório');
             return;
         }
     
         jsonCreate.amount = jsonCadastro.valor;
-        jsonCreate.item_number = jsonCadastro.idAgendamento;
+        jsonCreate.item_number = jsonCadastro.id;
         jsonCreate.buyer_name = jsonCadastro.nomeUsuario;
         jsonCreate.buyer_email = jsonCadastro.emailUsuario;
         jsonCreate.item_name = jsonCadastro.nomeProduto;
@@ -63,7 +63,19 @@ CoinPaymentSrv = function(client) {
             jsonCreate.status_text = "Waiting for buyer funds...";
             pedidoSrv.SalvarPedido(jsonCreate);
 
-            call.send(res);
+            let jsonReturn = JSON.parse(fs.readFileSync(__dirname.substring(0, __dirname.length - '\\service'.length) + '/template/coinPayment/returnCreate.json', 'utf8'));
+
+            jsonReturn.nome = jsonCadastro.nomeUsuario;
+            jsonReturn.nomeItem = jsonCadastro.nomeProduto;
+            jsonReturn.id =  jsonCadastro.id;
+            jsonReturn.status = jsonCreate.status;
+            jsonReturn.statusDesc = jsonCreate.status_text;
+            jsonReturn.Data = new Date();
+            jsonReturn.valorCripto = res.amount;
+            jsonReturn.enderecoCripto = res.address;
+            jsonReturn.qrCode = res.qrcode_url;
+
+            call.send(jsonReturn);
         });
         
     }
