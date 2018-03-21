@@ -7,6 +7,11 @@ let repositorio = new Repositorio();
 PedidoSrv = function(){
     PedidoSrv.prototype.ObterPedidoPorId = (id, cbSucesso, cbErro) =>{
         repositorio.ObterComFiltro(nomeColecao, {item_number:id}, (data)=>{
+            if(data.length == 0){
+                cbSucesso({});
+                return;
+            }
+
             data = data[0];
             let jsonRetorno = JSON.parse(fs.readFileSync(__dirname.substring(0, __dirname.length - '\\service'.length) + '/template/coinPayment/retornoObterPedido.json', 'utf8'));
             jsonRetorno.nome = data.buyer_name;
