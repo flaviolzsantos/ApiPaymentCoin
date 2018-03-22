@@ -9,14 +9,14 @@ fs = require('fs');
 let logSrv = new LogSrv();
 let pedidoSrv = new PedidoSrv();
 
-CoinPaymentSrv = function(client) {   
+CoinPaymentSrv = function(client, app) {   
+    
 
     CoinPaymentSrv.prototype.Create = function(jsonCadastro, call) {
         
 
         let jsonCreate = JSON.parse(fs.readFileSync(__dirname.substring(0, __dirname.length - '\\service'.length) + '/template/coinPayment/create.json', 'utf8'));
-
-       
+               
     
         if(_.isEqual(jsonCadastro, {})){
             call.status(500).send('Json é obrigatório');
@@ -37,15 +37,6 @@ CoinPaymentSrv = function(client) {
         jsonCreate.buyer_email = jsonCadastro.emailUsuario;
         jsonCreate.item_name = jsonCadastro.nomeProduto;
 
-        jsonCreate.idTx = "res.txn_id";
-        jsonCreate.status = 0;
-        jsonCreate.status_text = "Waiting for buyer funds...";
-        
-        pedidoSrv.SalvarPedido(jsonCreate);        
-
-        // call.send();
-        // return;
-
         client.createTransaction(jsonCreate, function(err, res){
     
             if(err){
@@ -53,15 +44,16 @@ CoinPaymentSrv = function(client) {
                 jsonCreate.erro = err;
                 logSrv.SalvarCriacaoCoinPayment(jsonCreate, true, util.TipoEnvio.Envio);
                 return;
-            }            
-            
-            logSrv.SalvarCriacaoCoinPayment(jsonCreate, false, util.TipoEnvio.Envio);
-            logSrv.SalvarCriacaoCoinPayment(res, false, util.TipoEnvio.Receber);
-
+            } 
             jsonCreate.idTx = res.txn_id;
             jsonCreate.status = 0;
             jsonCreate.status_text = "Waiting for buyer funds...";
+            jsonCreate.idUsuario = app.dadosUsuario._id;
+            res.idUsuario = app.dadosUsuario._id;
             pedidoSrv.SalvarPedido(jsonCreate);
+
+            logSrv.SalvarCriacaoCoinPayment(jsonCreate, false, util.TipoEnvio.Enviado);
+            logSrv.SalvarCriacaoCoinPayment(res, false, util.TipoEnvio.Recebido);
 
             let jsonReturn = JSON.parse(fs.readFileSync(__dirname.substring(0, __dirname.length - '\\service'.length) + '/template/coinPayment/returnCreate.json', 'utf8'));
 
@@ -81,6 +73,7 @@ CoinPaymentSrv = function(client) {
     }
 
     CoinPaymentSrv.prototype.GetTx = (id, call) =>{
+        
         client.getTx(id, (err, data) =>{
             if(err){
                 call.status(500).send(err);
@@ -92,7 +85,7 @@ CoinPaymentSrv = function(client) {
 
     CoinPaymentSrv.prototype.GetIpn = (data, call) =>{
         
-        logSrv.SalvarCriacaoCoinPayment(data, false, util.TipoEnvio.ReceberIPN);
+        logSrv.SalvarCriacaoCoinPayment(data, false, util.TipoEnvio.RecebidoIPN);
         pedidoSrv.AtualizarStatusPedido({item_number:data.item_number },{$set:{ status: data.status, status_text: data.status_text}});
         call.send();
         

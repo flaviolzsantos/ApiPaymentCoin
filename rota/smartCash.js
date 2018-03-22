@@ -2,7 +2,7 @@ let coinPaymentSrv = require('../service/coinPaymentSrv.js').CoinPaymentSrv;
 
 
 module.exports = function(app, coinPayment){
-    let srv = new coinPaymentSrv(coinPayment);
+    let srv = new coinPaymentSrv(coinPayment, app);
     let pedidoSrv = new PedidoSrv();
 
     app.post('/SmartCash', (req, res) => {

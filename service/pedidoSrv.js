@@ -1,5 +1,4 @@
 let Repositorio = require("../config/repositorioConfig.js").Repositorio,
-MongoClient = require('mongodb').MongoClient,
 nomeColecao = 'Pedido';
 
 let repositorio = new Repositorio();

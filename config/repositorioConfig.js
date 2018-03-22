@@ -84,7 +84,7 @@ Repositorio = function() {
 
             db.collection(nomeColecao).update(query, colecao, {multi:true}, (erroUpdate, dadosUpdate) =>{
                 
-                client.close();
+               
                 
                 if(erroUpdate){
                     (cbErro) ? cbErro(erroUpdate) : "";
