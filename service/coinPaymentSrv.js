@@ -22,6 +22,8 @@ CoinPaymentSrv = function(client, app) {
             call.status(500).send('Json é obrigatório');
             return;
         }
+        
+        
         if(_.isNil(jsonCadastro.valor)){
             call.status(500).send('Valor é obrigatório');
             return;
