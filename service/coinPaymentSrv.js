@@ -34,7 +34,7 @@ CoinPaymentSrv = function(client, app) {
         }
     
         jsonCreate.amount = jsonCadastro.valor;
-        jsonCreate.item_number = jsonCadastro.id;
+        jsonCreate.item_number = app.dadosUsuario._id + "~" + jsonCadastro.id;
         jsonCreate.buyer_name = jsonCadastro.nomeUsuario;
         jsonCreate.buyer_email = jsonCadastro.emailUsuario;
         jsonCreate.item_name = jsonCadastro.nomeProduto;
