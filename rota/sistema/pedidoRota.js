@@ -2,7 +2,7 @@ let LogSrv = require('../../service/pedidoSrv.js').PedidoSrv;
 
 let pedidoSrv = new PedidoSrv();
 
-module.exports = function(app){
+module.exports = function(app, erroSrv){
 
     app.get('/Sistema/Pedido/:idPedido',(req, res) => {
         

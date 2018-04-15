@@ -2,7 +2,7 @@ let LogSrv = require('../../service/logSrv.js').LogSrv;
 
 let logSrv = new LogSrv();
 
-module.exports = function(app){
+module.exports = function(app, erroSrv){
 
     app.get('/Sistema/ObterLog',(req, res) => {
         

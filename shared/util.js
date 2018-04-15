@@ -7,6 +7,11 @@ Util.TipoEnvio = {
     RecebidoIPN: "RecebidoIPN"
 };
 
+Util.TipoErro = {
+    Validacao : "Validacao",
+    Generico : "Generico"
+}
+
 
 
 exports.Util = Util;

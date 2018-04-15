@@ -2,12 +2,16 @@ const _ = require('lodash'),
 LogSrv = require('../service/logSrv').LogSrv,
 util = require('../shared/util').Util
 PedidoSrv = require('../service/pedidoSrv').PedidoSrv,
+UsuarioSrv = require('../service/usuarioSrv').UsuarioSrv,
+ErroSrv = require('../service/erroSrv').ErroSrv,
 MongoClient = require('mongodb').MongoClient,
 fs = require('fs');
 
 
 let logSrv = new LogSrv();
 let pedidoSrv = new PedidoSrv();
+let usuarioSrv = new UsuarioSrv();
+let erroSrv = new ErroSrv();
 
 CoinPaymentSrv = function(client, app) {   
     
@@ -88,7 +92,22 @@ CoinPaymentSrv = function(client, app) {
     CoinPaymentSrv.prototype.GetIpn = (data, call) =>{
         
         logSrv.SalvarCriacaoCoinPayment(data, false, util.TipoEnvio.RecebidoIPN);
-        pedidoSrv.AtualizarStatusPedido({item_number:data.item_number },{$set:{ status: data.status, status_text: data.status_text}});
+        
+        if(data.status == 100){
+            
+            usuarioSrv.EnviaConfirmacaoPagamento(data.item_number, (dadosRetornoSucesso) =>{
+                
+                pedidoSrv.AtualizarStatusPedido({item_number:data.item_number },{$set:{ status: data.status, status_text: data.status_text, integrado: true}});    
+
+            },(dadosRetornoErro) =>{
+
+                pedidoSrv.AtualizarStatusPedido({item_number:data.item_number },{$set:{ status: data.status, status_text: data.status_text, erroIntegrado: true}});
+                erroSrv.LogarErroGenerico(dadosRetornoErro, 'coinPayment/GetIpn', 'usuarioSrv.EnviaConfirmacaoPagamento');
+            })
+        }else{
+            pedidoSrv.AtualizarStatusPedido({item_number:data.item_number },{$set:{ status: data.status, status_text: data.status_text}});
+        }
+
         call.send();
         
     }
