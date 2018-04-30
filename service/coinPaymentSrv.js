@@ -93,9 +93,11 @@ CoinPaymentSrv = function(client, app) {
         
         logSrv.SalvarCriacaoCoinPayment(data, false, util.TipoEnvio.RecebidoIPN);
         
-        if(data.status == 100){
+        if(data.status == 100 || data.status < 0){
             
-            usuarioSrv.EnviaConfirmacaoPagamento(data.item_number, (dadosRetornoSucesso) =>{
+            let status = (data.status == 100) ? 100 : -1;
+
+            usuarioSrv.EnviaConfirmacaoPagamento(data.item_number, status, (dadosRetornoSucesso) =>{
                 
                 pedidoSrv.AtualizarStatusPedido({item_number:data.item_number },{$set:{ status: data.status, status_text: data.status_text, integrado: true}});    
 

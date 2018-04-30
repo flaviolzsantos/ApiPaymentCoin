@@ -35,7 +35,7 @@ UsuarioSrv = function(){
         }, cbErro);
     }
 
-    UsuarioSrv.prototype.EnviaConfirmacaoPagamento = (itemId, cbSucesso, cbErro) =>{
+    UsuarioSrv.prototype.EnviaConfirmacaoPagamento = (itemId, status, cbSucesso, cbErro) =>{
         let nomeMetodo = 'usuarioSrv/EnviaConfirmacaoPagamento';
         
         if(itemId == undefined){
@@ -68,7 +68,7 @@ UsuarioSrv = function(){
 
             let urlEnvioCliente = dadosSucesso[0].UrlIPN;
             
-            srvRest.EnviarPost(urlEnvioCliente, {id: idIntegracao}, cbSucesso, cbErro);
+            srvRest.EnviarPost(urlEnvioCliente, {Id: idIntegracao, Status: status}, cbSucesso, cbErro);
 
         },(erro) => srvErro.LogarErroValidacao(erro, nomeMetodo, 'ObterUsuarioPorId'));
 
